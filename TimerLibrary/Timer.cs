@@ -6,7 +6,6 @@ namespace TimerLibrary
 {
     public class Timer
     {
-        public Time Duration { private get; set; }
         public delegate void TimerEventHandler(Time e);
         public TimerEventHandler _TimerEventHandler;
         
@@ -18,18 +17,33 @@ namespace TimerLibrary
                 if (_TimerEventHandler != null) _TimerEventHandler -= value;
             }
         }
-
+        
+        public Time WorkDuration { get; set; }
+        public Time PauseDuration { get; set; }
+        private Time Duration { get; set; }
+        public int TimeLeftSeconds { get; set; }
+        public int TotalTimeSeconds { get; set; }
+        
         private Time ActiveDurationLeft { get; set; }
         private Time TimeOfStart { get; set; }
-        private int TimeLeftSeconds { get; set; }
         private bool IsRunning { get; set; }
 
+        public Timer()
+        {
+            
+        }
+
+        private Time SwitchState(Time current)
+        {
+            return current.State == 0 ? PauseDuration : WorkDuration;
+        }
+        
         public void Reset()
         {
             Stop();
             ActiveDurationLeft = Duration;
-            TimeLeftSeconds = GetTimeInSeconds(Duration);
-            _TimerEventHandler(GetTimeAsObject(TimeLeftSeconds));
+            TimeLeftSeconds = ConvertToSeconds(Duration);
+            _TimerEventHandler(ConvertToTimeObject(TimeLeftSeconds));
         }
 
         public void Flip()
@@ -43,8 +57,8 @@ namespace TimerLibrary
             TimeOfStart = GetTime();
             while (IsRunning)
             {
-                TimeLeftSeconds = GetTimeInSeconds(ActiveDurationLeft) - (GetTimeInSeconds(GetTime()) - GetTimeInSeconds(TimeOfStart));
-                _TimerEventHandler(GetTimeAsObject(TimeLeftSeconds));
+                TimeLeftSeconds = ConvertToSeconds(ActiveDurationLeft) - (ConvertToSeconds(GetTime()) - ConvertToSeconds(TimeOfStart));
+                _TimerEventHandler(ConvertToTimeObject(TimeLeftSeconds));
                 CheckState();
                 await Task.Delay(100);
             }
@@ -69,9 +83,10 @@ namespace TimerLibrary
         {
             if (TimeLeftSeconds <= 0)
             {
-                TimeLeftSeconds = GetTimeInSeconds(Duration);
+                if (Duration == null) Duration = WorkDuration;
+                TotalTimeSeconds = ConvertToSeconds(Duration);
+                TimeLeftSeconds = TotalTimeSeconds;
                 ActiveDurationLeft = Duration;
-
             }
             IsRunning = true;
             Count();
@@ -80,10 +95,10 @@ namespace TimerLibrary
         private void Stop()
         {
             IsRunning = false;
-            ActiveDurationLeft = GetTimeAsObject(TimeLeftSeconds);
+            ActiveDurationLeft = ConvertToTimeObject(TimeLeftSeconds);
         }
 
-        private Time GetTimeAsObject(int time)
+        private Time ConvertToTimeObject(int time)
         {
             var hour = Math.Max(0, (time / 60) / 60);
             var min = time/60 - 60 * hour;
@@ -98,7 +113,7 @@ namespace TimerLibrary
             };
         }
 
-        private int GetTimeInSeconds(Time time)
+        private int ConvertToSeconds(Time time)
         {
             return time.Sec + (time.Min * 60) + ((time.Hour * 60) * 60);
         }

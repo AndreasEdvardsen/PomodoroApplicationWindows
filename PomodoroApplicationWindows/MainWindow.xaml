@@ -8,7 +8,7 @@
         Title="MainWindow" Height="800" Width="800">
     <StackPanel VerticalAlignment="Center">
         <Grid>
-            <Ellipse Width="300" Height="300" Fill="LightCoral" RenderTransformOrigin="0.5,0.5" MouseUp="UIElement_OnMouseUpFlip">
+            <Ellipse Name="TimerEllipse" Width="300" Height="300" Fill="#3e4444" RenderTransformOrigin="0.5,0.5" MouseUp="UIElement_OnMouseUpFlip">
                 <Ellipse.RenderTransform>
                     <ScaleTransform x:Name="EllipseScaleTransform" ScaleX="1" ScaleY="1"></ScaleTransform>
                 </Ellipse.RenderTransform>
@@ -46,7 +46,7 @@
             <TextBlock Name="CurrentTimeText" HorizontalAlignment="Center" VerticalAlignment="Center" Text="20m" FontSize="50" Foreground="White" TextAlignment="Center"/>
         </Grid>
         
-        <Button Content="Reset" FontSize="40" Foreground="LightCoral" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonBase_OnClickReset">
+        <Button Name="ResetButton" Content="Reset" FontSize="50" Foreground="#82b74b" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Click="ButtonBase_OnClickReset">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <TextBlock Text="{TemplateBinding Content}"/>
