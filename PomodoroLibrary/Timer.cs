@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
-namespace TimerLibrary
+namespace PomodoroLibrary
 {
     public class Timer
     {
         public delegate void TimerEventHandler(Time e);
-        public TimerEventHandler _TimerEventHandler;
-        
-        public event TimerEventHandler TimerCounted
-        {
-            add => _TimerEventHandler += value;
-            remove
-            {
-                if (_TimerEventHandler != null) _TimerEventHandler -= value;
-            }
-        }
+        public event TimerEventHandler TimerCounted;
+        public event TimerEventHandler CountdownCompleted;
         
         public Time WorkDuration { get; set; }
         public Time PauseDuration { get; set; }
@@ -28,22 +19,30 @@ namespace TimerLibrary
         private Time TimeOfStart { get; set; }
         private bool IsRunning { get; set; }
 
-        public Timer()
-        {
-            
-        }
-
         private Time SwitchState(Time current)
         {
             return current.State == 0 ? PauseDuration : WorkDuration;
+        }
+
+        public Timer(Time workDuration, Time pauseDuration)
+        {
+            WorkDuration = workDuration;
+            PauseDuration = pauseDuration;
+            
+            Duration = WorkDuration;
+            TotalTimeSeconds = ConvertToSeconds(Duration);
+            TimeLeftSeconds = TotalTimeSeconds;
+            ActiveDurationLeft = Duration;
         }
         
         public void Reset()
         {
             Stop();
+            Duration = WorkDuration;
             ActiveDurationLeft = Duration;
+            TotalTimeSeconds = ConvertToSeconds(Duration);
             TimeLeftSeconds = ConvertToSeconds(Duration);
-            _TimerEventHandler(ConvertToTimeObject(TimeLeftSeconds));
+            TimerCounted?.Invoke(ConvertToTimeObject(TimeLeftSeconds));
         }
 
         public void Flip()
@@ -58,7 +57,7 @@ namespace TimerLibrary
             while (IsRunning)
             {
                 TimeLeftSeconds = ConvertToSeconds(ActiveDurationLeft) - (ConvertToSeconds(GetTime()) - ConvertToSeconds(TimeOfStart));
-                _TimerEventHandler(ConvertToTimeObject(TimeLeftSeconds));
+                TimerCounted?.Invoke(ConvertToTimeObject(TimeLeftSeconds));
                 CheckState();
                 await Task.Delay(100);
             }
@@ -76,7 +75,12 @@ namespace TimerLibrary
 
         private void CheckState()
         {
-            if (TimeLeftSeconds <= 0) Stop();
+            if (TimeLeftSeconds <= 0)
+            {
+                Stop();
+                CountdownCompleted?.Invoke(Duration);
+                Duration = SwitchState(Duration);
+            }
         }
 
         private void Start()
@@ -109,7 +113,6 @@ namespace TimerLibrary
                 Hour = hour,
                 Min = min,
                 Sec = sec
-                
             };
         }
 

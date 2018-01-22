@@ -1,4 +1,4 @@
-﻿namespace TimerLibrary
+﻿namespace PomodoroLibrary
 {
     public class Time
     {
