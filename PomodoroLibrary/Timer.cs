@@ -6,35 +6,35 @@ namespace PomodoroLibrary
     public class Timer
     {
         public delegate void TimerEventHandler(Time e);
-        public event TimerEventHandler TimerCounted;
-        public event TimerEventHandler CountdownCompleted;
-        
+
+        public Timer(Time workDuration, Time pauseDuration)
+        {
+            WorkDuration = workDuration;
+            PauseDuration = pauseDuration;
+
+            Duration = WorkDuration;
+            TotalTimeSeconds = ConvertToSeconds(Duration);
+            TimeLeftSeconds = TotalTimeSeconds;
+            ActiveDurationLeft = Duration;
+        }
+
         public Time WorkDuration { get; set; }
         public Time PauseDuration { get; set; }
         private Time Duration { get; set; }
         public int TimeLeftSeconds { get; set; }
         public int TotalTimeSeconds { get; set; }
-        
+
         private Time ActiveDurationLeft { get; set; }
         private Time TimeOfStart { get; set; }
         private bool IsRunning { get; set; }
+        public event TimerEventHandler TimerCounted;
+        public event TimerEventHandler CountdownCompleted;
 
         private Time SwitchState(Time current)
         {
             return current.State == 0 ? PauseDuration : WorkDuration;
         }
 
-        public Timer(Time workDuration, Time pauseDuration)
-        {
-            WorkDuration = workDuration;
-            PauseDuration = pauseDuration;
-            
-            Duration = WorkDuration;
-            TotalTimeSeconds = ConvertToSeconds(Duration);
-            TimeLeftSeconds = TotalTimeSeconds;
-            ActiveDurationLeft = Duration;
-        }
-        
         public void Reset()
         {
             Stop();
@@ -56,7 +56,8 @@ namespace PomodoroLibrary
             TimeOfStart = GetTime();
             while (IsRunning)
             {
-                TimeLeftSeconds = ConvertToSeconds(ActiveDurationLeft) - (ConvertToSeconds(GetTime()) - ConvertToSeconds(TimeOfStart));
+                TimeLeftSeconds = ConvertToSeconds(ActiveDurationLeft) -
+                                  (ConvertToSeconds(GetTime()) - ConvertToSeconds(TimeOfStart));
                 TimerCounted?.Invoke(ConvertToTimeObject(TimeLeftSeconds));
                 CheckState();
                 await Task.Delay(100);
@@ -75,12 +76,10 @@ namespace PomodoroLibrary
 
         private void CheckState()
         {
-            if (TimeLeftSeconds <= 0)
-            {
-                Stop();
-                CountdownCompleted?.Invoke(Duration);
-                Duration = SwitchState(Duration);
-            }
+            if (TimeLeftSeconds > 0) return;
+            Stop();
+            CountdownCompleted?.Invoke(Duration);
+            Duration = SwitchState(Duration);
         }
 
         private void Start()
@@ -92,6 +91,7 @@ namespace PomodoroLibrary
                 TimeLeftSeconds = TotalTimeSeconds;
                 ActiveDurationLeft = Duration;
             }
+
             IsRunning = true;
             Count();
         }
@@ -104,10 +104,10 @@ namespace PomodoroLibrary
 
         private Time ConvertToTimeObject(int time)
         {
-            var hour = Math.Max(0, (time / 60) / 60);
-            var min = time/60 - 60 * hour;
+            var hour = Math.Max(0, time / 60 / 60);
+            var min = time / 60 - 60 * hour;
             var sec = time - 60 * min;
-                
+
             return new Time
             {
                 Hour = hour,
@@ -118,7 +118,7 @@ namespace PomodoroLibrary
 
         private int ConvertToSeconds(Time time)
         {
-            return time.Sec + (time.Min * 60) + ((time.Hour * 60) * 60);
+            return time.Sec + time.Min * 60 + time.Hour * 60 * 60;
         }
     }
 }

@@ -6,124 +6,241 @@
         xmlns:local="clr-namespace:PomodoroApplicationWindows"
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="500">
-    <Grid>
-         <StackPanel>
-        <Grid Margin="20">
-            <Ellipse Name="TimerEllipse" Width="300" Height="300" Fill="#3e4444" Margin="0,20,0,0" RenderTransformOrigin="0.5,0.5"
-                     MouseUp="UIElement_OnMouseUpFlip">
-                <Ellipse.RenderTransform>
-                    <ScaleTransform x:Name="EllipseScaleTransform" ScaleX="1" ScaleY="1" />
-                </Ellipse.RenderTransform>
-                <Ellipse.Triggers>
-                    <EventTrigger RoutedEvent="Ellipse.MouseEnter">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetName="EllipseScaleTransform"
-                                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                    To="1.05" Duration="0:0:0.1" />
-                                <DoubleAnimation
-                                    Storyboard.TargetName="EllipseScaleTransform"
-                                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                    To="1.05" Duration="0:0:0.1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="Ellipse.MouseLeave">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation
-                                    Storyboard.TargetName="EllipseScaleTransform"
-                                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                    To="1" Duration="0:0:0.1" />
-                                <DoubleAnimation
-                                    Storyboard.TargetName="EllipseScaleTransform"
-                                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                    To="1" Duration="0:0:0.1" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Ellipse.Triggers>
-            </Ellipse>
-            <TextBlock Name="CurrentTimeText" HorizontalAlignment="Center" VerticalAlignment="Center" Text="20m" FontSize="50" Foreground="White" TextAlignment="Center"/>
-        </Grid>
-        
-        <Polygon Name="ArrowButton" Width="100" Points="20,0 50,30 80,0" Margin="0,0,0,0" Fill="#82b74b" MouseLeftButtonUp="Polygon_Clicked" HorizontalAlignment="Center"></Polygon>
-        
-        <Grid Name="DropDownMenu" HorizontalAlignment="Center" Visibility="Collapsed">
-            <Rectangle Width="80" Fill="#82b74b"></Rectangle>
+    <StackPanel>
+        <Grid>
             <StackPanel>
-                <TextBlock Width="80" TextAlignment="Center"  FontSize="30" Foreground="White" Tag="10" MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger" MouseLeave="TextBlockBackgroungChanger">10m
-                    <TextBlock.Background>
-                        <SolidColorBrush Color="Black" Opacity="0" />
-                    </TextBlock.Background>
+                <Grid Margin="20">
+                    <Ellipse Name="TimerEllipse" Width="300" Height="300" Fill="#3e4444" Margin="0,20,0,0"
+                             RenderTransformOrigin="0.5,0.5"
+                             MouseUp="UIElement_OnMouseUpFlip">
+                        <Ellipse.RenderTransform>
+                            <ScaleTransform x:Name="EllipseScaleTransform" ScaleX="1" ScaleY="1" />
+                        </Ellipse.RenderTransform>
+                        <Ellipse.Triggers>
+                            <EventTrigger RoutedEvent="Ellipse.MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                            To="1.05" Duration="0:0:0.1" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                            To="1.05" Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Ellipse.MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                            To="1" Duration="0:0:0.1" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                            To="1" Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Ellipse.MouseDown">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                            To="1" Duration="0:0:0.1" AutoReverse="true" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                            To="1" Duration="0:0:0.1" AutoReverse="true" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <TextBlock Name="CurrentTimeText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Text="20m" FontSize="50" Foreground="White" TextAlignment="Center"
+                               MouseUp="UIElement_OnMouseUpFlip">
+                        <TextBlock.Triggers>
+                            <EventTrigger RoutedEvent="Ellipse.MouseDown">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                            To="1" Duration="0:0:0.1" AutoReverse="true" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                            To="1" Duration="0:0:0.1" AutoReverse="true" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Ellipse.MouseEnter">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                            To="1.05" Duration="0:0:0.1" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="EllipseScaleTransform"
+                                            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                            To="1.05" Duration="0:0:0.1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </TextBlock.Triggers>
                     </TextBlock>
-                <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="20" MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger" MouseLeave="TextBlockBackgroungChanger">20m
-                    <TextBlock.Background>
-                        <SolidColorBrush Color="Black" Opacity="0" />
-                    </TextBlock.Background>
-                    </TextBlock>
-                <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="25" MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger" MouseLeave="TextBlockBackgroungChanger">25m
-                    <TextBlock.Background>
-                        <SolidColorBrush Color="Black" Opacity="0" />
-                    </TextBlock.Background>
-                    </TextBlock>
-                <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="30" MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger" MouseLeave="TextBlockBackgroungChanger">30m
-                    <TextBlock.Background>
-                        <SolidColorBrush Color="Black" Opacity="0" />
-                    </TextBlock.Background>
-                    </TextBlock>
-                <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="40" MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger" MouseLeave="TextBlockBackgroungChanger">40m
-                    <TextBlock.Background>
-                        <SolidColorBrush Color="Black" Opacity="0" />
-                    </TextBlock.Background>
-                    </TextBlock>
-                
-                <Button Content="Reset" FontSize="30" Foreground="White" HorizontalAlignment="Center"
-                     RenderTransformOrigin="0.5,0.5" Click="ButtonBase_OnClickReset">
-                 <Button.Template>
-                     <ControlTemplate TargetType="Button">
-                         <TextBlock Text="{TemplateBinding Content}" />
-                     </ControlTemplate>
-                 </Button.Template>
-                 <Button.RenderTransform>
-                     <ScaleTransform x:Name="MyAnimatedScaleTransform" ScaleX="1" ScaleY="1" />
-                 </Button.RenderTransform>
+                </Grid>
 
-            <Button.Triggers>
-                <EventTrigger RoutedEvent="Button.MouseEnter">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation
-                                Storyboard.TargetName="MyAnimatedScaleTransform"
-                                Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                To="1.1" Duration="0:0:0.1" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="MyAnimatedScaleTransform"
-                                Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                To="1.1" Duration="0:0:0.1" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
+                <Polygon Width="100" Points="20,0 50,30 80,0" Fill="#82b74b"
+                         MouseLeftButtonUp="Polygon_Clicked" HorizontalAlignment="Center"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Polygon.RenderTransform>
+                        <ScaleTransform x:Name="ArrowButtonTransform" ScaleX="1" ScaleY="1" />
+                    </Polygon.RenderTransform>
+                    <Polygon.Triggers>
+                        <EventTrigger RoutedEvent="Ellipse.MouseDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ArrowButtonTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                        To="1" Duration="0:0:0.1" AutoReverse="true" />
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ArrowButtonTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                        To="1" Duration="0:0:0.1" AutoReverse="true" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Polygon.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ArrowButtonTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                        To="1.1" Duration="0:0:0.1" />
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ArrowButtonTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                        To="1.1" Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Polygon.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ArrowButtonTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                        To="1" Duration="0:0:0.1" />
+                                    <DoubleAnimation
+                                        Storyboard.TargetName="ArrowButtonTransform"
+                                        Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                        To="1" Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Polygon.Triggers>
+                </Polygon>
 
-                <EventTrigger RoutedEvent="Button.MouseLeave">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation
-                                Storyboard.TargetName="MyAnimatedScaleTransform"
-                                Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                To="1" Duration="0:0:0.1" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="MyAnimatedScaleTransform"
-                                Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                To="1" Duration="0:0:0.1" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Button.Triggers>
-        </Button>
+
+                <Grid Name="DropDownMenu" HorizontalAlignment="Center" Visibility="Collapsed" MouseLeave="Menu_Leave">
+                    <Rectangle Width="100" Fill="#82b74b" />
+                    <StackPanel>
+                        <TextBlock Width="80" TextAlignment="Center" Margin="0,10,0,0" FontSize="30" Foreground="White"
+                                   Tag="10" MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger"
+                                   MouseLeave="TextBlockBackgroungChanger">
+                            10m
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="Black" Opacity="0" />
+                            </TextBlock.Background>
+                        </TextBlock>
+                        <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="20"
+                                   MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger"
+                                   MouseLeave="TextBlockBackgroungChanger">
+                            20m
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="Black" Opacity="0" />
+                            </TextBlock.Background>
+                        </TextBlock>
+                        <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="25"
+                                   MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger"
+                                   MouseLeave="TextBlockBackgroungChanger">
+                            25m
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="Black" Opacity="0" />
+                            </TextBlock.Background>
+                        </TextBlock>
+                        <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="30"
+                                   MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger"
+                                   MouseLeave="TextBlockBackgroungChanger">
+                            30m
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="Black" Opacity="0" />
+                            </TextBlock.Background>
+                        </TextBlock>
+                        <TextBlock Width="80" TextAlignment="Center" FontSize="30" Foreground="White" Tag="40"
+                                   MouseUp="ChangeCurrentTime" MouseEnter="TextBlockBackgroungChanger"
+                                   MouseLeave="TextBlockBackgroungChanger">
+                            40m
+                            <TextBlock.Background>
+                                <SolidColorBrush Color="Black" Opacity="0" />
+                            </TextBlock.Background>
+                        </TextBlock>
+
+                        <Button Content="Reset" FontSize="30" Margin="0,0,0,10" Foreground="White"
+                                HorizontalAlignment="Center"
+                                RenderTransformOrigin="0.5,0.5" Click="ButtonBase_OnClickReset">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <TextBlock Text="{TemplateBinding Content}" />
+                                </ControlTemplate>
+                            </Button.Template>
+                            <Button.RenderTransform>
+                                <ScaleTransform x:Name="MyAnimatedScaleTransform" ScaleX="1" ScaleY="1" />
+                            </Button.RenderTransform>
+
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="MyAnimatedScaleTransform"
+                                                Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                                To="1.1" Duration="0:0:0.1" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="MyAnimatedScaleTransform"
+                                                Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                                To="1.1" Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+
+                                <EventTrigger RoutedEvent="Button.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="MyAnimatedScaleTransform"
+                                                Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                                                To="1" Duration="0:0:0.1" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="MyAnimatedScaleTransform"
+                                                Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                                                To="1" Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
         </Grid>
     </StackPanel>
-    </Grid>
 </Window>
