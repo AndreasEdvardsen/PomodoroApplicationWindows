@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace PomodoroLibrary
+﻿namespace TimerLibrary
 {
     public class Timer
     {
@@ -23,9 +20,21 @@ namespace PomodoroLibrary
             }
         }
 
+        public decimal GetPercentage()
+        {
+            return TimeLeft / (decimal)TotalTime * 100;
+        }
+
         public void Reset()
         {
             _isWorkMode = true;
+            ResetTime();
+        }
+
+        private void ResetTime()
+        {
+            TotalTime = WorkTime;
+            TimeLeft = TotalTime;
         }
     }
 }

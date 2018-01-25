@@ -4,45 +4,29 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using PomodoroLibrary;
+using TimerLibrary;
 
 namespace PomodoroApplicationWindows
 {
-    /// <summary>
-    ///     Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow
     {
-        private readonly Timer _timer;
+        private readonly TimerLogic _timerLogic;
 
         public MainWindow()
         {
             InitializeComponent();
-            _timer = new Timer(new Time
-                {
-                    Hour = 0,
-                    Min = 20,
-                    Sec = 0,
-                    State = 0
-                },
-                new Time
-                {
-                    Hour = 0,
-                    Min = 5,
-                    Sec = 0,
-                    State = 1
-                });
-            _timer.TimerCounted += TimerOnCounted;
-            _timer.CountdownCompleted += TimerCompleted;
+            _timerLogic = new TimerLogic(1200, 300);
+            _timerLogic.TimerCounted += TimerLogicOnCounted;
+            _timerLogic.CountdownCompleted += TimerLogicCompleted;
         }
 
-        private void TimerCompleted(Time e)
+        private void TimerLogicCompleted(Time e)
         {
-            var stringToShow = e.State == 0 ? "Time for a break!" : "Time for work!";
+            var stringToShow = e.IsWorkMode == false ? "Time for a break!" : "Time for work!";
             MessageBox.Show(stringToShow, stringToShow, MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
-        private void ColorChanger(int current, int original)
+        private void ColorChanger()
         {
             var currentColor = (SolidColorBrush) TimerEllipse.Fill;
             var colorAnimation = new ColorAnimation
@@ -51,9 +35,9 @@ namespace PomodoroApplicationWindows
                 From = currentColor.Color
             };
 
-            var percentage = current / (decimal) original * 100;
-            if (percentage <= 0)
-                colorAnimation.To = ColorFromString("#405d27");
+            var percentage = _timerLogic.Timer.GetPercentage();
+            
+            if (percentage <= 0) colorAnimation.To = ColorFromString("#405d27");
             else if (percentage < 30)
                 colorAnimation.To = ColorFromString("#82b74b");
             else if (percentage < 60)
@@ -70,21 +54,21 @@ namespace PomodoroApplicationWindows
             return (Color) ColorConverter.ConvertFromString(color);
         }
 
-        private void TimerOnCounted(Time e)
+        private void TimerLogicOnCounted(Time e)
         {
             var kake = e.Min + "m " + e.Sec + "s";
             CurrentTimeText.Text = kake;
-            ColorChanger(_timer.TimeLeftSeconds, _timer.TotalTimeSeconds);
+            ColorChanger();
         }
 
         private void UIElement_OnMouseUpFlip(object sender, MouseButtonEventArgs e)
         {
-            _timer.Flip();
+            _timerLogic.Flip();
         }
 
         private void ButtonBase_OnClickReset(object sender, RoutedEventArgs e)
         {
-            _timer.Reset();
+            _timerLogic.Reset();
         }
 
         private void Polygon_Clicked(object sender, MouseButtonEventArgs e)
@@ -97,14 +81,8 @@ namespace PomodoroApplicationWindows
             var button = (TextBlock) sender;
             var timeTochangeTo = Convert.ToInt32(button.Tag);
 
-            _timer.WorkDuration = new Time
-            {
-                Hour = 0,
-                Min = timeTochangeTo,
-                Sec = 0,
-                State = 0
-            };
-            _timer.Reset();
+            _timerLogic.Timer.WorkTime = timeTochangeTo * 60;
+            _timerLogic.Reset();
         }
 
         private void ToggleDropdownMenu()

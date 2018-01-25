@@ -81,9 +81,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PomodoroLibrary\PomodoroLibrary.csproj">
-      <Project>{a66949e0-af78-407d-95f8-780ad0db39d3}</Project>
-      <Name>PomodoroLibrary</Name>
+    <ProjectReference Include="..\TimerLibrary\TimerLibrary.csproj">
+      <Project>{3d999d6a-b674-4e5d-9bea-45f96ee62ffb}</Project>
+      <Name>TimerLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
